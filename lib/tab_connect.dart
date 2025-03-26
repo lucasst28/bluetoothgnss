@@ -14,142 +14,147 @@ Widget buildTabConnectUi(BuildContext context, TabsState state) {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
-              Text(
-                'Live status',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium!
-                    .copyWith(fontFamily: 'GoogleSans', color: Colors.blueGrey),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Lat:',
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  Text(paramMap['lat_double_07_str'] as String? ?? waitingDev,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Lon:',
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  Text(paramMap['lon_double_07_str'] as String? ?? waitingDev,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      String content =
-                          "${paramMap['lat_double_07_str'] ?? waitingDev},${paramMap['lon_double_07_str'] ?? waitingDev}"; //no space after comma for sharing to gmaps
-                      Share.share(
-                              'https://www.google.com/maps/search/?api=1&query=$content')
-                          .then((result) {
-                        state.snackbar('Shared: $content');
-                      });
-                    },
-                    child: const Icon(Icons.share),
+                  Text(
+                    'Live status',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontFamily: 'GoogleSans', color: Colors.blueGrey),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Lat:',
+                          style: Theme.of(context).textTheme.headlineSmall),
+                      Text(
+                          paramMap['lat_double_07_str'] as String? ??
+                              waitingDev,
+                          style: Theme.of(context).textTheme.headlineSmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Lon:',
+                          style: Theme.of(context).textTheme.headlineSmall),
+                      Text(
+                          paramMap['lon_double_07_str'] as String? ??
+                              waitingDev,
+                          style: Theme.of(context).textTheme.headlineSmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          String content =
+                              "${paramMap['lat_double_07_str'] ?? waitingDev},${paramMap['lon_double_07_str'] ?? waitingDev}"; //no space after comma for sharing to gmaps
+                          Share.share(
+                                  'https://www.google.com/maps/search/?api=1&query=$content')
+                              .then((result) {
+                            state.snackbar('Shared: $content');
+                          });
+                        },
+                        child: const Icon(Icons.share),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(2.0),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          String content =
+                              "${paramMap['lat_double_07_str'] ?? waitingDev},${paramMap['lon_double_07_str'] ?? waitingDev}";
+                          Clipboard.setData(ClipboardData(text: content))
+                              .then((result) {
+                            state.snackbar('Copied to clipboard: $content');
+                          });
+                        },
+                        child: const Icon(Icons.content_copy),
+                      )
+                    ],
+                  )
+                ] +
+                getDevSepcificRows(context, state) +
+                [
+                  const Padding(
+                    padding: EdgeInsets.all(5.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Location sent to Android:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(state.mockLocationSetStatus,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Alt type used:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(paramMap["alt_type"] as String? ?? waitingDev,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
                   ),
                   const Padding(
-                    padding: EdgeInsets.all(2.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      String content =
-                          "${paramMap['lat_double_07_str'] ?? waitingDev},${paramMap['lon_double_07_str'] ?? waitingDev}";
-                      Clipboard.setData(ClipboardData(text: content))
-                          .then((result) {
-                        state.snackbar('Copied to clipboard: $content');
-                      });
-                    },
-                    child: const Icon(Icons.content_copy),
-                  )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Total GGA Count:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                          paramMap["GN_GGA_count_str"] as String? ??
+                              paramMap["GP_GGA_count_str"] as String? ??
+                              waitingDev,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Total RMC Count:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                          paramMap["GN_RMC_count_str"] as String? ??
+                              paramMap["GP_RMC_count_str"] as String? ??
+                              waitingDev,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Current log folder:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(paramMap["logfile_folder"] as String? ?? waitingDev,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Current log name:',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(paramMap["logfile_name"] as String? ?? waitingDev,
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Current log size (MB):',
+                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                          paramMap["logfile_n_bytes"] == null
+                              ? waitingDev
+                              : (paramMap["logfile_n_bytes"] / 1000000)
+                                  .toString(),
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
                 ],
-              )
-              ] + getDevSepcificRows(context, state) + [
-              const Padding(
-                padding: EdgeInsets.all(5.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Location sent to Android:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(state.mockLocationSetStatus,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Alt type used:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(paramMap["alt_type"] as String? ?? waitingDev,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.all(5.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Total GGA Count:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(
-                      paramMap["GN_GGA_count_str"] as String? ??
-                          paramMap["GP_GGA_count_str"] as String? ??
-                          waitingDev,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Total RMC Count:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(
-                      paramMap["GN_RMC_count_str"] as String? ??
-                          paramMap["GP_RMC_count_str"] as String? ??
-                          waitingDev,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Current log folder:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(paramMap["logfile_folder"] as String? ?? waitingDev,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Current log name:',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(paramMap["logfile_name"] as String? ?? waitingDev,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Current log size (MB):',
-                      style: Theme.of(context).textTheme.bodySmall),
-                  Text(
-                      paramMap["logfile_n_bytes"] == null
-                          ? waitingDev
-                          : (paramMap["logfile_n_bytes"] / 1000000).toString(),
-                      style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-            ],
           ),
         ),
       ),
@@ -298,11 +303,11 @@ Widget buildTabConnectUi(BuildContext context, TabsState state) {
   ));
 }
 
-Map<String,String> QSTARZ_RCR_CHAR_TO_LOGTYPE_MAP = {
-'B':"POI",
-'T':"time",
-'D':'distance',
-'S':'speed'
+Map<String, String> QSTARZ_RCR_CHAR_TO_LOGTYPE_MAP = {
+  'B': "POI",
+  'T': "time",
+  'D': 'distance',
+  'S': 'speed'
 };
 
 String getQstarzRCRLogType(int? asciiCode) {
@@ -311,13 +316,15 @@ String getQstarzRCRLogType(int? asciiCode) {
   }
   String character = String.fromCharCode(asciiCode);
   String? lt = QSTARZ_RCR_CHAR_TO_LOGTYPE_MAP[character];
-  return "$character${lt==null?'':' ($lt)'}";
+  return "$character${lt == null ? '' : ' ($lt)'}";
 }
+
 String getgetQstarzDateime(int? timestampS, int? millisecond) {
   if (timestampS == null || millisecond == null) {
     return "";
   }
-  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestampS * 1000 + millisecond);
+  DateTime dateTime =
+      DateTime.fromMillisecondsSinceEpoch(timestampS * 1000 + millisecond);
   return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} "
       "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}.${millisecond.toString().padLeft(3, '0')}";
 }
@@ -330,29 +337,26 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('Device Time:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(getgetQstarzDateime(paramMap['QSTARZ_timestamp_s'] as int? ?? 0, paramMap['QSTARZ_millisecond'] as int? ?? 0),
+          Text('Device Time:', style: Theme.of(context).textTheme.bodySmall),
+          Text(
+              getgetQstarzDateime(paramMap['QSTARZ_timestamp_s'] as int? ?? 0,
+                  paramMap['QSTARZ_millisecond'] as int? ?? 0),
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('Fix status:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              (paramMap['QSTARZ_fix_status_matched'] ?? waitingDev).toString(),
+          Text('Fix status:', style: Theme.of(context).textTheme.bodySmall),
+          Text((paramMap['QSTARZ_fix_status_matched'] ?? waitingDev).toString(),
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('RCR:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              getQstarzRCRLogType(paramMap['QSTARZ_rcr'] as int?),
+          Text('RCR:', style: Theme.of(context).textTheme.bodySmall),
+          Text(getQstarzRCRLogType(paramMap['QSTARZ_rcr'] as int?),
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -362,7 +366,8 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
           Text('Float speed (km/h):',
               style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_float_speed_kmh_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_float_speed_kmh_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -372,7 +377,8 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
           Text('Float height (m):',
               style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_float_height_m_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_float_height_m_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -382,67 +388,62 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
           Text('Heading (degrees):',
               style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_heading_degrees_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_heading_degrees_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('G-sensor X:',
-              style: Theme.of(context).textTheme.bodySmall),
+          Text('G-sensor X:', style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_g_sensor_x_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_g_sensor_x_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('G-sensor Y:',
-              style: Theme.of(context).textTheme.bodySmall),
+          Text('G-sensor Y:', style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_g_sensor_y_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_g_sensor_y_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('G-sensor Z:',
-              style: Theme.of(context).textTheme.bodySmall),
+          Text('G-sensor Z:', style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_g_sensor_z_double_02_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_g_sensor_z_double_02_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('Max SNR:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              paramMap['QSTARZ_max_snr_str'] as String? ?? waitingDev,
+          Text('Max SNR:', style: Theme.of(context).textTheme.bodySmall),
+          Text(paramMap['QSTARZ_max_snr_str'] as String? ?? waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('HDOP:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              paramMap['QSTARZ_hdop_double_02_str'] as String? ?? waitingDev,
+          Text('HDOP:', style: Theme.of(context).textTheme.bodySmall),
+          Text(paramMap['QSTARZ_hdop_double_02_str'] as String? ?? waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('VDOP:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              paramMap['QSTARZ_vdop_double_02_str'] as String? ?? waitingDev,
+          Text('VDOP:', style: Theme.of(context).textTheme.bodySmall),
+          Text(paramMap['QSTARZ_vdop_double_02_str'] as String? ?? waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -452,7 +453,8 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
           Text('N Satellites in view:',
               style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_satellite_count_view_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_satellite_count_view_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -462,31 +464,27 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
           Text('N Satellites used:',
               style: Theme.of(context).textTheme.bodySmall),
           Text(
-              paramMap['QSTARZ_satellite_count_used_str'] as String? ?? waitingDev,
+              paramMap['QSTARZ_satellite_count_used_str'] as String? ??
+                  waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('Fix quality:',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              paramMap['QSTARZ_fix_quality_matched'] as String? ?? waitingDev,
+          Text('Fix quality:', style: Theme.of(context).textTheme.bodySmall),
+          Text(paramMap['QSTARZ_fix_quality_matched'] as String? ?? waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('Battery (%)',
-              style: Theme.of(context).textTheme.bodySmall),
-          Text(
-              paramMap['battery_percent'] as String? ?? waitingDev,
+          Text('Battery (%)', style: Theme.of(context).textTheme.bodySmall),
+          Text(paramMap['battery_percent'] as String? ?? waitingDev,
               style: Theme.of(context).textTheme.bodySmall),
         ],
       )
-
     ];
   }
 
@@ -494,9 +492,11 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
     Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text('Time from GNSS:',
-            style: Theme.of(context).textTheme.bodySmall),
-        Text(paramMap['GN_time'] as String? ?? paramMap['GP_time'] as String? ?? waitingDev,
+        Text('Time from GNSS:', style: Theme.of(context).textTheme.bodySmall),
+        Text(
+            paramMap['GN_time'] as String? ??
+                paramMap['GP_time'] as String? ??
+                waitingDev,
             style: Theme.of(context).textTheme.bodySmall),
       ],
     ),
@@ -539,7 +539,10 @@ List<Widget> getDevSepcificRows(BuildContext context, TabsState state) {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text('Fix status:', style: Theme.of(context).textTheme.bodySmall),
-        Text((paramMap["GN_status"] as String? ?? paramMap["GP_status"] as String? ?? "No data"),
+        Text(
+            (paramMap["GN_status"] as String? ??
+                paramMap["GP_status"] as String? ??
+                "No data"),
             style: Theme.of(context).textTheme.bodySmall),
       ],
     ),

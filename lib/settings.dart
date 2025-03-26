@@ -58,7 +58,8 @@ class SettingsWidgetState extends State<SettingsWidget> {
             });
 
             //get list from native engine
-            List<dynamic> oriMpl = eventMap["callback_payload"] as List<dynamic>? ?? [];
+            List<dynamic> oriMpl =
+                eventMap["callback_payload"] as List<dynamic>? ?? [];
             developer.log("got mpl: $oriMpl");
             if (oriMpl.isEmpty) {
               await toast(
@@ -68,7 +69,7 @@ class SettingsWidgetState extends State<SettingsWidget> {
 
             //conv to List<String> and sort
             List<String> mountPointStrList =
-            List<String>.generate(oriMpl.length, (i) => "${oriMpl[i]}");
+                List<String>.generate(oriMpl.length, (i) => "${oriMpl[i]}");
 
             //filter startswith STR;
             mountPointStrList =
@@ -76,7 +77,7 @@ class SettingsWidgetState extends State<SettingsWidget> {
 
             //remove starting STR; to sort by mountpoint name
             mountPointStrList = List<String>.generate(mountPointStrList.length,
-                    (i) => mountPointStrList[i].substring(4));
+                (i) => mountPointStrList[i].substring(4));
 
             //filter for that contains ; so wont have errors for split further below
             mountPointStrList =
@@ -92,7 +93,7 @@ class SettingsWidgetState extends State<SettingsWidget> {
             developer.log('sort_by_nearest: $sortByNearest');
 
             List<Map<String, String>> mountPointMapList =
-            List.empty(growable: true);
+                List.empty(growable: true);
 
             for (String val in mountPointStrList) {
               List<String> parts = val.split(";");
@@ -123,13 +124,13 @@ class SettingsWidgetState extends State<SettingsWidget> {
                       lastLon = double.parse(parts[1]);
                       lastPosValid = true;
                     } catch (e) {
-                      developer.log(
-                          "WARNING: parse last lat/lon exception {e}");
+                      developer
+                          .log("WARNING: parse last lat/lon exception {e}");
                     }
                   }
                 }
-                developer.log(
-                    'last_pos_valid: $lastPosValid $lastLat $lastLon');
+                developer
+                    .log('last_pos_valid: $lastPosValid $lastLat $lastLon');
 
                 if (lastPosValid) {
                   //calc distance into the map in the list
@@ -197,8 +198,8 @@ class SettingsWidgetState extends State<SettingsWidget> {
               if (mounted) {
                 await Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (BuildContext context) {
-                      return SettingsWidget(widget.prefService, widget.bdMap);
-                    }));
+                  return SettingsWidget(widget.prefService, widget.bdMap);
+                }));
               }
             }
           } else if (eventMap["callback_src"] == "set_log_uri") {
@@ -221,9 +222,7 @@ class SettingsWidgetState extends State<SettingsWidget> {
         developer.log('Received error: ${error.message}');
       });
     }
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +230,8 @@ class SettingsWidgetState extends State<SettingsWidget> {
     List<DropdownMenuItem<String>> devlist = List.empty(growable: true);
     for (dynamic bdaddr in widget.bdMap.keys) {
       devlist.add(DropdownMenuItem(
-          value: bdaddr.toString(), child: Text(widget.bdMap[bdaddr.toString()].toString())));
+          value: bdaddr.toString(),
+          child: Text(widget.bdMap[bdaddr.toString()].toString())));
     }
 
     return PrefService(
@@ -265,11 +265,11 @@ class SettingsWidgetState extends State<SettingsWidget> {
                           "Check for Settings > 'Location' ON and 'High Accuracy'"),
                       pref: 'check_settings_location'),
                   PrefCheckbox(
-                      title: Text(
-                          "Enable Logging $log_bt_rx_log_uri"),
+                      title: Text("Enable Logging $log_bt_rx_log_uri"),
                       pref: 'log_bt_rx',
                       onChange: (bool? val) async {
-                        widget.prefService.set('log_bt_rx', false); //set to false first and await event from java callback to set to true if all perm/folder set pass
+                        widget.prefService.set('log_bt_rx',
+                            false); //set to false first and await event from java callback to set to true if all perm/folder set pass
                         widget.prefService.set("log_bt_rx_log_uri", "");
                         setState(() {
                           log_bt_rx_log_uri = "";
@@ -278,10 +278,12 @@ class SettingsWidgetState extends State<SettingsWidget> {
                         if (enable) {
                           bool writeEnabled = false;
                           try {
-                            writeEnabled = (await methodChannel
-                                .invokeMethod('is_write_enabled')) as bool? ?? false;
+                            writeEnabled = (await methodChannel.invokeMethod(
+                                    'is_write_enabled')) as bool? ??
+                                false;
                           } on PlatformException catch (e) {
-                            await toast("WARNING: check _is_connecting failed: $e");
+                            await toast(
+                                "WARNING: check _is_connecting failed: $e");
                           }
                           if (writeEnabled == false) {
                             await toast(
@@ -377,19 +379,21 @@ class SettingsWidgetState extends State<SettingsWidget> {
                           Future.delayed(const Duration(seconds: 0), () async {
                             try {
                               retCode = (await methodChannel
-                                  .invokeMethod("get_mountpoint_list", {
-                                'ntrip_host': host,
-                                'ntrip_port': port,
-                                'ntrip_user': user,
-                                'ntrip_pass': pass,
-                              })) as int? ?? -1;
+                                      .invokeMethod("get_mountpoint_list", {
+                                    'ntrip_host': host,
+                                    'ntrip_port': port,
+                                    'ntrip_user': user,
+                                    'ntrip_pass': pass,
+                                  })) as int? ??
+                                  -1;
                               developer.log(
                                   "get_mountpoint_list req waiting callback ret: $retCode");
                             } catch (e) {
                               setState(() {
                                 loading = false;
                               });
-                              await toast("List mount-points failed invoke: $e");
+                              await toast(
+                                  "List mount-points failed invoke: $e");
                             }
                           });
                         } catch (e) {

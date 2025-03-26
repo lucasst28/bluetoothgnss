@@ -310,7 +310,8 @@ class TabsState extends State<Tabs>
         // 660296614
         if (paramMap.containsKey('mock_location_set_ts')) {
           try {
-            _mockLocationSetTs = (paramMap['mock_location_set_ts'] ?? 0) as int? ?? 0;
+            _mockLocationSetTs =
+                (paramMap['mock_location_set_ts'] ?? 0) as int? ?? 0;
           } catch (e) {
             developer.log('get parsed param exception: $e');
           }
@@ -561,10 +562,14 @@ class TabsState extends State<Tabs>
     }
 
     try {
-      _isBtConnected = (await methodChannel.invokeMethod('is_bt_connected')) as bool? ?? false;
+      _isBtConnected =
+          (await methodChannel.invokeMethod('is_bt_connected')) as bool? ??
+              false;
       _isNtripConnected =
-      (await methodChannel.invokeMethod('is_ntrip_connected'))  as bool? ?? false;
-      ntripPacketsCount = (await methodChannel.invokeMethod('get_ntrip_cb_count')) as int? ?? 0;
+          (await methodChannel.invokeMethod('is_ntrip_connected')) as bool? ??
+              false;
+      ntripPacketsCount =
+          (await methodChannel.invokeMethod('get_ntrip_cb_count')) as int? ?? 0;
 
       if (_isBtConnected) {
         await wakelockEnable();
@@ -609,7 +614,8 @@ class TabsState extends State<Tabs>
 
     try {
       _isBtConnThreadConnecting =
-          await methodChannel.invokeMethod('is_conn_thread_alive') as bool? ?? false;
+          await methodChannel.invokeMethod('is_conn_thread_alive') as bool? ??
+              false;
       developer.log(
           "_is_bt_conn_thread_alive_likely_connecting: $_isBtConnThreadConnecting");
       if (_isBtConnThreadConnecting) {
@@ -705,7 +711,8 @@ class TabsState extends State<Tabs>
 
       //developer.log('check_and_update_selected_device9');
 
-      if (getSelectedBdaddr(widget.prefService).isEmpty || (await getSelectedBdname(widget.prefService)).isEmpty) {
+      if (getSelectedBdaddr(widget.prefService).isEmpty ||
+          (await getSelectedBdname(widget.prefService)).isEmpty) {
         String msg =
             "Please select your Bluetooth GPS/GNSS Receiver in Settings (the gear icon on top right)";
         /*Fluttertoast.showToast(
@@ -850,15 +857,19 @@ class TabsState extends State<Tabs>
 
   Future<void> connect() async {
     developer.log("main.dart connect() start");
-    String log_bt_rx_log_uri = PrefService.of(context).get('log_bt_rx_log_uri') ?? "";
+    String log_bt_rx_log_uri =
+        PrefService.of(context).get('log_bt_rx_log_uri') ?? "";
     bool autostart = PrefService.of(context).get('autostart') ?? false;
     bool gapMode = PrefService.of(context).get('ble_gap_scan_mode') ?? false;
-    String log_uri = PrefService.of(context).get('log_bt_rx_log_uri') as String? ?? "";
+    String log_uri =
+        PrefService.of(context).get('log_bt_rx_log_uri') as String? ?? "";
 
     if (log_bt_rx_log_uri.isNotEmpty) {
       bool writeEnabled = false;
       try {
-        writeEnabled = (await methodChannel.invokeMethod('is_write_enabled')) as bool? ?? false;
+        writeEnabled =
+            (await methodChannel.invokeMethod('is_write_enabled')) as bool? ??
+                false;
       } on PlatformException catch (e) {
         await toast("WARNING: check write_enabled failed: $e");
       }
@@ -870,11 +881,10 @@ class TabsState extends State<Tabs>
 
       bool canCreateFile = false;
       try {
-
-          canCreateFile = (await methodChannel.invokeMethod(
-              'test_can_create_file_in_chosen_folder',
-              {"log_bt_rx_log_uri": log_uri})) as bool? ?? false;
-
+        canCreateFile = (await methodChannel.invokeMethod(
+                'test_can_create_file_in_chosen_folder',
+                {"log_bt_rx_log_uri": log_uri})) as bool? ??
+            false;
       } on PlatformException catch (e) {
         await toast(
             "WARNING: check test_can_create_file_in_chosen_folder failed: $e");
@@ -913,7 +923,9 @@ class TabsState extends State<Tabs>
 
     bool connecting = false;
     try {
-      connecting = (await methodChannel.invokeMethod('is_conn_thread_alive')) as bool? ?? false;
+      connecting =
+          (await methodChannel.invokeMethod('is_conn_thread_alive')) as bool? ??
+              false;
     } on PlatformException catch (e) {
       await toast("WARNING: check _is_connecting failed: $e");
     }
@@ -927,7 +939,8 @@ class TabsState extends State<Tabs>
       return;
     }
 
-    String bdaddr = (PrefService.of(context).get("target_bdaddr")) as String? ?? "";
+    String bdaddr =
+        (PrefService.of(context).get("target_bdaddr")) as String? ?? "";
     if (bdaddr.isEmpty) {
       developer.log("main.dart connect() start1");
       snackbar("No bluetooth device selected in settings");
@@ -944,19 +957,21 @@ class TabsState extends State<Tabs>
     try {
       developer.log("main.dart connect() start connect start");
       final bool ret = (await methodChannel.invokeMethod('connect', {
-        "bdaddr": bdaddr,
-        'secure': PrefService.of(context).get('secure') ?? true,
-        'reconnect': PrefService.of(context).get('reconnect') ?? false,
-        'ble_gap_scan_mode': gapMode,
-        'log_bt_rx_log_uri': log_bt_rx_log_uri,
-        'disable_ntrip': PrefService.of(context).get('disable_ntrip') ?? false,
-        'ntrip_host': PrefService.of(context).get('ntrip_host'),
-        'ntrip_port': PrefService.of(context).get('ntrip_port'),
-        'ntrip_mountpoint': PrefService.of(context).get('ntrip_mountpoint'),
-        'ntrip_user': PrefService.of(context).get('ntrip_user'),
-        'ntrip_pass': PrefService.of(context).get('ntrip_pass'),
-        'autostart': autostart,
-      })) as bool? ?? false;
+            "bdaddr": bdaddr,
+            'secure': PrefService.of(context).get('secure') ?? true,
+            'reconnect': PrefService.of(context).get('reconnect') ?? false,
+            'ble_gap_scan_mode': gapMode,
+            'log_bt_rx_log_uri': log_bt_rx_log_uri,
+            'disable_ntrip':
+                PrefService.of(context).get('disable_ntrip') ?? false,
+            'ntrip_host': PrefService.of(context).get('ntrip_host'),
+            'ntrip_port': PrefService.of(context).get('ntrip_port'),
+            'ntrip_mountpoint': PrefService.of(context).get('ntrip_mountpoint'),
+            'ntrip_user': PrefService.of(context).get('ntrip_user'),
+            'ntrip_pass': PrefService.of(context).get('ntrip_pass'),
+            'autostart': autostart,
+          })) as bool? ??
+          false;
       developer.log("main.dart connect() start connect done");
       if (ret) {
         status = "Connecting - please wait ...";
